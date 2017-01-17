@@ -1,0 +1,19 @@
+!$xev
+!$xmodmap -pke
+
+!Change Alt_L -> control & Caps_Lock -> Alt_L
+remove mod1 = Alt_L
+!remove lock = Caps_Lock
+
+add control = Alt_L
+!add mod1 = Caps_Lock
+
+!Alt_L -> ctrl
+!keycode 64 = Control_L
+!Caps_Lock -> ctrl
+!keycode 66 = Control_L
+
+!for stream11
+keycode 66 = Control_L
+keycode 64 = Control_L
+keycode 37 = Alt_L
