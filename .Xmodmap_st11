@@ -1,0 +1,16 @@
+!This files used by only stream11.
+
+!Change Alt_L -> control & Caps_Lock -> Alt_L
+remove mod1 = Alt_L
+remove lock = Caps_Lock
+
+add control = Alt_L
+add mod1 = Caps_Lock
+
+!Alt_L -> control
+keycode 64 = Control_L
+!Caps_Lock -> control
+keycode 66 = Control_L
+
+!
+keycode 37 = Alt_L
