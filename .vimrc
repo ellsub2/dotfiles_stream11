@@ -130,21 +130,54 @@ NeoBundleFetch 'Shougo/neobundle.vim'	"neobundle自体をneobundleで管理
 
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/neocomplete'
-	let g:neocomplete#enable_at_startup = 1
-	let g:neocomplete#enable_ignore_case = 1
-	let g:neocomplete#enable_smart_case = 1
-	let g:neocomplete#enable_auto_select = 1
-	let g:neocomplete#enable_enable_camel_case_completion = 0
-	if !exists('g:neocomplete#keyword_patterns')
-	let g:neocomplete#keyword_patterns = {}
-	endif
-	let g:neocomplete#keyword_patterns._ = '\h\w*'
-	inoremap <expr><TAB>	pumvisible() ? "\<C-n>" : "\<TAB>"
-	if !exists('g:neocomplete#force_omni_input_patterns')
-	let g:neocomplete#force_omni_input_patterns = {}
-	endif
-	let g:neocomplete#force_omni_input_patterns.cpp =
-	\ '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
+"	let g:neocomplete#enable_at_startup = 1
+"	let g:neocomplete#enable_ignore_case = 1
+"	let g:neocomplete#enable_smart_case = 1
+"	let g:neocomplete#enable_auto_select = 1
+"	let g:neocomplete#enable_enable_camel_case_completion = 0
+"	if !exists('g:neocomplete#keyword_patterns')
+"   	let g:neocomplete#keyword_patterns = {}
+"	endif
+"	let g:neocomplete#keyword_patterns._ = '\h\w*'
+"	inoremap <expr><TAB>	pumvisible() ? "\<C-n>" : "\<TAB>"
+"	if !exists('g:neocomplete#force_omni_input_patterns')
+"	    let g:neocomplete#force_omni_input_patterns = {}
+"	endif
+"	let g:neocomplete#force_omni_input_patterns.cpp =
+"	\ '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
+
+   " http://dackdive.hateblo.jp/entry/2014/08/13/130000
+    " Disable AutoComplPop.
+    let g:acp_enableAtStartup = 0
+    " Use neocomplete.
+    let g:neocomplete#enable_at_startup = 1
+    " Use smartcase.
+    let g:neocomplete#enable_smart_case = 1
+    " Set minimum syntax keyword length.
+    let g:neocomplete#sources#syntax#min_keyword_length = 3
+    let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+    " Plugin key-mappings.
+    inoremap <expr><C-g>     neocomplete#undo_completion()
+    inoremap <expr><C-l>     neocomplete#complete_common_string()
+    
+    " Recommended key-mappings.
+    " <CR>: close popup and save indent.
+    inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+    function! s:my_cr_function()
+      return neocomplete#close_popup() . "\<CR>"
+       " For no inserting <CR> key.
+      return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+    endfunction
+    " <TAB>: completion.
+    inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+    " <C-h>, <BS>: close popup and delete backword char.
+    inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+    inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+    inoremap <expr><C-y>  neocomplete#close_popup()
+    inoremap <expr><C-e>  neocomplete#cancel_popup()
+ 
+    " Close popup by <Space>.
+    inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() :"\<Space>"
 
 NeoBundle 'itchyny/lightline.vim'	"ステータスライン全体拡張
 	set laststatus=2
@@ -170,16 +203,34 @@ NeoBundle 'vim-jp/cpp-vim',{
 NeoBundle 'sudar/vim-arduino-syntax'
 
 "rsense
-NeoBundle 'NigoroJr/rsense'
-NeoBundleLazy 'supermomonga/neocomplete-rsense.vim', {
-	\ 'autoload' : { 'insert' : 1, 'filetype' : 'ruby', } }
+"NeoBundle 'NigoroJr/rsense'
+"NeoBundleLazy 'supermomonga/neocomplete-rsense.vim', {
+"	\ 'autoload' : { 'insert' : 1, 'filetype' : 'ruby', } }
+"
+"if !exists('g:neocomplete#force_omni_input_patterns')
+"	let g:neocomplete#force_omni_input_patterns = {}
+"endif
+"	let g:neocomplete#force_omni_input_patterns.ruby = '[^.*\t]\.\w*\|\h\w*::'
+"
+"	let g:rsenseUseOmniFunc = 1
 
-if !exists('g:neocomplete#force_omni_input_patterns')
-	let g:neocomplete#force_omni_input_patterns = {}
-endif
-	let g:neocomplete#force_omni_input_patterns.ruby = '[^.*\t]\.\w*\|\h\w*::'
+NeoBundle 'davidhalter/jedi-vim'
+    autocmd FileType python setlocal omnifunc=jedi#completions
+    let g:jedi#completions_enabled = 0
+    let g:jedi#auto_vim_configuration = 0
+    if !exists('g:neocomplete#force_omni_input_patterns')
+        let g:neocomplete#force_omni_input_patterns = {}
+    endif
+    " let g:neocomplete#force_omni_input_patterns.python = '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
+    let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t]\.\w*'
+    " docstringは表示しない
+    autocmd FileType python setlocal completeopt-=preview
 
-	let g:rsenseUseOmniFunc = 1
+NeoBundle 'nathanaelkane/vim-indent-guides'
+    let g:indent_guides_enable_on_vim_startup=1
+    set ts=2 sw=2 et
+    let g:indent_guides_start_level=2
+    let g:indent_guides_guide_size=1
 
 " end sequence
 "=====================================================================================
@@ -190,4 +241,5 @@ filetype on	"ファイルタイプの識別
 filetype indent on
 filetype plugin on
 
+set backspace=indent,eol,start
 NeoBundleCheck
